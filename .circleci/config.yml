@@ -6,5 +6,11 @@ jobs:
     working_directory: /go/src/github.com/Tufin/totem
     steps:
       - checkout
-      - run: dep ensure
-      - run: go test -v ./...
+      - run:
+          name: Install the project's dependencies
+          command:
+            dep ensure -v
+      - run:
+          name: Test
+          command:
+            go test -v ./...
