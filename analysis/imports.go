@@ -5,6 +5,16 @@ import (
 	"strings"
 )
 
+var commonImports = NewList().AddItems(
+	[]string{
+		"github.com/tufin/orca/go-common",
+		"github.com/tufin/orca/util",
+		"github.com/tufin/orca/util/log",
+		"github.com/tufin/orca/util/db",
+		"github.com/tufin/orca/util/gcs",
+		"github.com/tufin/orca/api",
+	})
+
 func GetInvalidImports(service string, path string, file []byte) []string {
 
 	var ret []string
@@ -20,7 +30,9 @@ func GetInvalidImports(service string, path string, file []byte) []string {
 func isValid(service string, path string, check string) bool {
 
 	ret := true
-	if strings.HasPrefix(check, path) && getService(check, path) != service {
+	if strings.HasPrefix(check, path) &&
+		getService(check, path) != service &&
+		!commonImports.Contains(check) {
 		ret = false
 	}
 
@@ -50,7 +62,7 @@ func getAllImports(file []byte) []string {
 			break
 		}
 
-		if len(strings.TrimSpace(line)) != 0 && toBuffer {
+		if len(strings.TrimSpace(line)) != 0 && toBuffer && strings.Index(line, "\"") > 0 {
 			ret = append(ret, line[strings.Index(line, "\"")+1:strings.LastIndex(line, "\"")])
 		}
 	}
