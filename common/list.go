@@ -1,4 +1,4 @@
-package analysis
+package common
 
 type List struct {
 	// Using an empty struct{} has advantage that it doesn't require any additional space
@@ -11,42 +11,42 @@ func NewList() *List {
 	return &List{data: make(map[string]struct{})}
 }
 
-func (arr *List) AddItems(items []string) *List {
+func (l *List) AddItems(items []string) *List {
 
 	for _, curr := range items {
-		arr.Add(curr)
+		l.Add(curr)
 	}
 
-	return arr
+	return l
 }
 
-func (arr *List) Add(item string) *List {
+func (l *List) Add(item string) *List {
 
-	arr.data[item] = struct{}{}
+	l.data[item] = struct{}{}
 
-	return arr
+	return l
 }
 
-func (arr List) Contains(item string) bool {
+func (l List) Contains(item string) bool {
 
-	_, ret := arr.data[item]
+	_, ret := l.data[item]
 
 	return ret
 }
 
-func (arr List) Size() int {
+func (l List) Size() int {
 
-	return len(arr.data)
+	return len(l.data)
 }
 
-func (arr List) Items() []string {
+func (l List) Items() []string {
 
-	if len(arr.data) == 0 {
+	if len(l.data) == 0 {
 		return []string{}
 	}
 
-	ret := make([]string, 0, len(arr.data))
-	for i := range arr.data {
+	ret := make([]string, 0, len(l.data))
+	for i := range l.data {
 		ret = append(ret, i)
 	}
 
@@ -54,14 +54,14 @@ func (arr List) Items() []string {
 }
 
 // IsSimilar returns true if both arrays contains same items
-func (arr List) IsSimilar(list []string) bool {
+func (l List) IsSimilar(list []string) bool {
 
 	ret := true
-	if arr.Size() != len(list) {
+	if l.Size() != len(list) {
 		ret = false
 	} else {
 		for _, currItem := range list {
-			if !arr.Contains(currItem) {
+			if !l.Contains(currItem) {
 				ret = false
 				break
 			}

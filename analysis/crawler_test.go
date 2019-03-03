@@ -5,7 +5,22 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/tufin/totem/analysis"
+	"github.com/tufin/totem/common"
 )
+
+func TestCrawler(t *testing.T) {
+
+	imports := common.NewList()
+	imports.Add("github.com/tufin/totem/common")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", imports).Run("..")
+	require.Len(t, invalidImports, 0)
+}
+
+func TestCrawler_RunNoCommonImports(t *testing.T) {
+
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList()).Run("..")
+	require.Len(t, invalidImports, 4)
+}
 
 func TestCrawl(t *testing.T) {
 

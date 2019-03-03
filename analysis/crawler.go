@@ -7,15 +7,17 @@ import (
 	"strings"
 
 	"github.com/tufin/logrus"
+	"github.com/tufin/totem/common"
 )
 
 type Crawler struct {
-	pkg string
+	pkg           string
+	commonImports *common.List
 }
 
-func NewCrawler(pkg string) *Crawler {
+func NewCrawler(pkg string, commonImports *common.List) *Crawler {
 
-	return &Crawler{pkg: pkg}
+	return &Crawler{pkg: pkg, commonImports: commonImports}
 }
 
 func (c Crawler) Run(root string) map[string][]string {
@@ -28,7 +30,7 @@ func (c Crawler) Run(root string) map[string][]string {
 				if err != nil {
 					logrus.Error(err)
 				} else {
-					imports := GetInvalidImports(currFile.Name(), c.pkg, data)
+					imports := GetInvalidImports(currFile.Name(), c.pkg, data, c.commonImports)
 					if len(imports) > 0 {
 						ret[file] = imports
 					}
