@@ -3,21 +3,25 @@ package analysis
 import (
 	"bufio"
 	"strings"
+
+	"github.com/tufin/totem/common"
 )
 
-var commonImports *List
+var (
+	commonImports *List
+)
 
 func init() {
 
 	commonImports = NewList()
-	commonImports.AddItems(strings.Split(GetEnv("COMMON_IMPORTS"), ","))
+	commonImports.AddItems(strings.Split(common.GetEnv("COMMON_IMPORTS"), ","))
 }
 
-func GetInvalidImports(service string, path string, file []byte) []string {
+func GetInvalidImports(service string, pkg string, file []byte) []string {
 
 	var ret []string
 	for _, currImport := range getAllImports(file) {
-		if !isValid(service, path, currImport) {
+		if !isValid(service, pkg, currImport) {
 			ret = append(ret, currImport)
 		}
 	}
@@ -25,11 +29,11 @@ func GetInvalidImports(service string, path string, file []byte) []string {
 	return ret
 }
 
-func isValid(service string, path string, check string) bool {
+func isValid(service string, pkg string, check string) bool {
 
 	ret := true
-	if strings.HasPrefix(check, path) &&
-		getService(check, path) != service &&
+	if strings.HasPrefix(check, pkg) &&
+		getService(check, pkg) != service &&
 		!commonImports.Contains(check) {
 		ret = false
 	}

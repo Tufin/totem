@@ -9,7 +9,16 @@ import (
 	"github.com/tufin/logrus"
 )
 
-func Run(root string) map[string][]string {
+type Crawler struct {
+	pkg string
+}
+
+func NewCrawler(pkg string) *Crawler {
+
+	return &Crawler{pkg: pkg}
+}
+
+func (c Crawler) Run(root string) map[string][]string {
 
 	ret := make(map[string][]string)
 	for _, currFile := range getFiles(root) {
@@ -19,7 +28,7 @@ func Run(root string) map[string][]string {
 				if err != nil {
 					logrus.Error(err)
 				} else {
-					imports := GetInvalidImports(currFile.Name(), "github.com/tufin/orca/", data)
+					imports := GetInvalidImports(currFile.Name(), c.pkg, data)
 					if len(imports) > 0 {
 						ret[file] = imports
 					}

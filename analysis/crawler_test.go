@@ -12,7 +12,7 @@ func TestCrawl(t *testing.T) {
 	ok := false
 	analysis.Crawl("..", ".txt", func(file string) {
 		ok = true
-		require.Equal(t, "sample.go.txt", file)
+		require.Equal(t, "../analysis/sample.go.txt", file)
 	})
 	require.True(t, ok)
 }
