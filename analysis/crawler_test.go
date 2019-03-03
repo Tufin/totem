@@ -19,7 +19,7 @@ func TestCrawler(t *testing.T) {
 func TestCrawler_RunNoCommonImports(t *testing.T) {
 
 	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList()).Run("..")
-	require.Len(t, invalidImports, 4)
+	require.True(t, len(invalidImports) > 0)
 }
 
 func TestCrawl(t *testing.T) {
