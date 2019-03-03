@@ -1,10 +1,23 @@
 package main
 
-import "github.com/tufin/totem/analysis"
+import (
+	"os"
+
+	"github.com/tufin/logrus"
+	"github.com/tufin/totem/analysis"
+)
 
 func main() {
 
-	analysis.Run("/Users/effi.bar/view/go/src/github.com/tufin/orca")
+	filePathToInvalidImports := analysis.Run("/Users/effi.bar/view/go/src/github.com/tufin/orca")
+	for currFilePath, currInvalidImports := range filePathToInvalidImports {
+		logrus.Printf("'%s': '%v'", currFilePath, currInvalidImports)
+	}
+
+	if len(filePathToInvalidImports) > 0 {
+		os.Exit(1)
+	}
+
 	//app := cli.NewApp()
 	//app.Name = "totem"
 	//app.Usage = "find invalid imports"

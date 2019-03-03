@@ -9,8 +9,9 @@ import (
 	"github.com/tufin/logrus"
 )
 
-func Run(root string) {
+func Run(root string) map[string][]string {
 
+	ret := make(map[string][]string)
 	for _, currFile := range getFiles(root) {
 		if currFile.IsDir() {
 			Crawl(getFilePath(root, currFile), ".go", func(file string) {
@@ -20,14 +21,14 @@ func Run(root string) {
 				} else {
 					imports := GetInvalidImports(currFile.Name(), "github.com/tufin/orca/", data)
 					if len(imports) > 0 {
-						fmt.Println(file)
-						fmt.Println(imports)
-						fmt.Println("")
+						ret[file] = imports
 					}
 				}
 			})
 		}
 	}
+
+	return ret
 }
 
 func Crawl(path string, fileSuffix string, onFileEvent func(file string)) {
