@@ -5,14 +5,13 @@ import (
 	"strings"
 )
 
-var commonImports = NewList().AddItems([]string{
-	"github.com/tufin/orca/go-common",
-	"github.com/tufin/orca/util",
-	"github.com/tufin/orca/util/log",
-	"github.com/tufin/orca/util/db",
-	"github.com/tufin/orca/util/gcs",
-	"github.com/tufin/orca/api",
-})
+var commonImports *List
+
+func init() {
+
+	commonImports = NewList()
+	commonImports.AddItems(strings.Split(GetEnv("COMMON_IMPORTS"), ","))
+}
 
 func GetInvalidImports(service string, path string, file []byte) []string {
 
