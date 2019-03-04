@@ -28,3 +28,13 @@ func TestGetInvalidImports(t *testing.T) {
 		require.True(t, invalids.Contains(currImport))
 	}
 }
+
+func TestGetInvalidImports_NoImports(t *testing.T) {
+
+	data, err := ioutil.ReadFile("sample_no_imports.go.txt")
+	require.NoError(t, err)
+
+	invalidImports := analysis.GetInvalidImports("ceribro", "github.com/tufin/orca/", data, common.NewList())
+
+	require.Empty(t, invalidImports)
+}

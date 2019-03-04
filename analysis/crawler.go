@@ -62,7 +62,7 @@ func getFiles(path string) []os.FileInfo {
 
 	ret, err := ioutil.ReadDir(path)
 	if err != nil {
-		panic(err)
+		logrus.Fatal(err)
 	}
 
 	return ret

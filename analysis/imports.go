@@ -1,7 +1,7 @@
 package analysis
 
 import (
-	"bufio"
+	"regexp"
 	"strings"
 
 	"github.com/tufin/totem/common"
@@ -39,24 +39,10 @@ func getService(path string, subPath string) string {
 func getAllImports(file []byte) []string {
 
 	var ret []string
-	mode := "import ("
-	toBuffer := false
-	scanner := bufio.NewScanner(strings.NewReader(string(file)))
-	for scanner.Scan() {
-
-		line := scanner.Text()
-		if strings.TrimSpace(line) == mode {
-			if mode == "import (" {
-				toBuffer = true
-				mode = ")"
-				continue
-			}
-			break
-		}
-
-		if len(strings.TrimSpace(line)) != 0 && toBuffer && strings.Index(line, "\"") > 0 {
-			ret = append(ret, line[strings.Index(line, "\"")+1:strings.LastIndex(line, "\"")])
-		}
+	r1, _ := regexp.Compile(`import \([^)]+\)`)
+	r2, _ := regexp.Compile(`"(.+)"`)
+	for _, match := range r2.FindAllSubmatch(r1.Find(file), -1) {
+		ret = append(ret, string(match[1]))
 	}
 
 	return ret

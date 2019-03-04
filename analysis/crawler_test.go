@@ -24,10 +24,10 @@ func TestCrawler_RunNoCommonImports(t *testing.T) {
 
 func TestCrawl(t *testing.T) {
 
-	ok := false
+	count := 0
 	analysis.Crawl("..", ".txt", func(file string) {
-		ok = true
-		require.Equal(t, "../analysis/sample.go.txt", file)
+		count++
+		require.True(t, "../analysis/sample.go.txt" == file || "../analysis/sample_no_imports.go.txt" == file)
 	})
-	require.True(t, ok)
+	require.Equal(t, 2, count)
 }
