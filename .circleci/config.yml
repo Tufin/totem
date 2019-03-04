@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.9
+    working_directory: /go/src/github.com/tufin/totem
+    steps:
+      - checkout
+      - run:
+          name: Install the project's dependencies
+          command:
+            dep ensure -v
+      - run:
+          name: Test
+          command:
+            go test -v ./...
