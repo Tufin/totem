@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.9
+      - image: circleci/golang:1.12
     working_directory: /go/src/github.com/tufin/totem
     steps:
       - checkout
@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Test
           command:
-            go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+            script/testcov.sh
       - run:
-          name: Coverage
+          name: Upload coverage results
           command:
             bash <(curl -s https://codecov.io/bash)
