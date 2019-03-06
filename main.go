@@ -9,6 +9,12 @@ import (
 	"github.com/tufin/totem/common"
 )
 
+func init() {
+
+	logrus.SetReportCaller(true)
+	logrus.SetLevel(getLogLevel())
+}
+
 func main() {
 
 	filePathToInvalidImports := getInvalidImports()
@@ -36,6 +42,23 @@ func getInvalidImports() map[string][]string {
 		ret = crawler.RunService(root, service)
 	} else {
 		ret = crawler.Run(root)
+	}
+
+	return ret
+}
+
+func getLogLevel() logrus.Level {
+
+	ret := logrus.InfoLevel
+	level := common.GetEnv("LOG_LEVEL")
+	if level != "" {
+		if strings.EqualFold(level, "debug") {
+			ret = logrus.DebugLevel
+		} else if strings.EqualFold(level, "warn") {
+			ret = logrus.WarnLevel
+		} else if strings.EqualFold(level, "error") {
+			ret = logrus.ErrorLevel
+		}
 	}
 
 	return ret
