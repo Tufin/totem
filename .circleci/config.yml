@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Test
           command:
-            go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+            /script/testcov.sh
       - run:
-          name: Coverage
+          name: Upload coverage results
           command:
             bash <(curl -s https://codecov.io/bash)
