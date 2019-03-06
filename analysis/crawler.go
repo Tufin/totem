@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/tufin/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/tufin/totem/common"
 )
 
@@ -25,37 +25,54 @@ func (c Crawler) Run(root string) map[string][]string {
 	ret := make(map[string][]string)
 	for _, currFile := range getFiles(root) {
 		if currFile.IsDir() {
-			Crawl(getFilePath(root, currFile), ".go", func(file string) {
-				data, err := ioutil.ReadFile(file)
-				if err != nil {
-					logrus.Error(err)
-				} else {
-					imports := GetInvalidImports(currFile.Name(), c.pkg, data, c.commonImports)
-					if len(imports) > 0 {
-						ret[file] = imports
-					}
-				}
-			})
+			ret = union(ret, c.RunService(root, currFile.Name()))
 		}
 	}
 
 	return ret
 }
 
-func Crawl(path string, fileSuffix string, onFileEvent func(file string)) {
+func (c Crawler) RunService(root string, service string) map[string][]string {
+
+	ret := make(map[string][]string)
+	crawl(getFilePath(root, service), ".go", func(file string) {
+		data, err := ioutil.ReadFile(file)
+		if err != nil {
+			logrus.Error(err)
+		} else {
+			imports := GetInvalidImports(service, c.pkg, data, c.commonImports)
+			if len(imports) > 0 {
+				ret[file] = imports
+			}
+		}
+	})
+
+	return ret
+}
+
+func crawl(path string, fileSuffix string, onFileEvent func(file string)) {
 
 	for _, currFile := range getFiles(path) {
 		if currFile.IsDir() {
-			Crawl(getFilePath(path, currFile), fileSuffix, onFileEvent)
+			crawl(getFilePath(path, currFile.Name()), fileSuffix, onFileEvent)
 		} else if strings.HasSuffix(currFile.Name(), fileSuffix) {
-			onFileEvent(getFilePath(path, currFile))
+			onFileEvent(getFilePath(path, currFile.Name()))
 		}
 	}
 }
 
-func getFilePath(path string, currFile os.FileInfo) string {
+func union(m1 map[string][]string, m2 map[string][]string) map[string][]string {
 
-	return fmt.Sprintf("%s/%s", path, currFile.Name())
+	for k, v := range m2 {
+		m1[k] = v
+	}
+
+	return m1
+}
+
+func getFilePath(path string, file string) string {
+
+	return fmt.Sprintf("%s/%s", path, file)
 }
 
 func getFiles(path string) []os.FileInfo {

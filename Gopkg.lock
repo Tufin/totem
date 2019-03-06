@@ -8,10 +8,22 @@
   version = "v1.1.1"
 
 [[projects]]
+  name = "github.com/konsorten/go-windows-terminal-sequences"
+  packages = ["."]
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
+
+[[projects]]
   name = "github.com/pmezard/go-difflib"
   packages = ["difflib"]
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "e1e72e9de974bd926e5c56f83753fba2df402ce5"
+  version = "v1.3.0"
 
 [[projects]]
   name = "github.com/stretchr/testify"
@@ -23,14 +35,23 @@
   version = "v1.3.0"
 
 [[projects]]
-  name = "github.com/urfave/cli"
-  packages = ["."]
-  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
-  version = "v1.20.0"
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  revision = "8dd112bcdc25174059e45e07517d9fc663123347"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = [
+    "unix",
+    "windows"
+  ]
+  revision = "a98ae47d97a5abb3a3e9045da36315f9f8312970"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e232527438c166834357159971b4afd20c25ec5d592b7848517a63192615f740"
+  inputs-digest = "aa9f8f4a4ed9a2d1b067a2f20d4e41a610877bf97bb11e77afecda02a5806626"
   solver-name = "gps-cdcl"
   solver-version = 1
