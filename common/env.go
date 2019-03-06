@@ -3,7 +3,7 @@ package common
 import (
 	"os"
 
-	"github.com/tufin/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 func GetEnvOrExit(key string) string {

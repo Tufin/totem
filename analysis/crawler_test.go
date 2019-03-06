@@ -8,7 +8,7 @@ import (
 	"github.com/tufin/totem/common"
 )
 
-func TestCrawler(t *testing.T) {
+func TestCrawler_Run(t *testing.T) {
 
 	imports := common.NewList()
 	imports.Add("github.com/tufin/totem/common")
@@ -16,18 +16,22 @@ func TestCrawler(t *testing.T) {
 	require.Len(t, invalidImports, 0)
 }
 
-func TestCrawler_RunNoCommonImports(t *testing.T) {
+func TestCrawler_Run_NoCommonImports(t *testing.T) {
 
 	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList()).Run("..")
 	require.True(t, len(invalidImports) > 0)
 }
 
-func TestCrawl(t *testing.T) {
+func TestCrawler_RunService(t *testing.T) {
 
-	count := 0
-	analysis.Crawl("..", ".txt", func(file string) {
-		count++
-		require.True(t, "../analysis/sample.go.txt" == file || "../analysis/sample_no_imports.go.txt" == file)
-	})
-	require.Equal(t, 2, count)
+	imports := common.NewList()
+	imports.Add("github.com/tufin/totem/common")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", imports).RunService("..", "analysis")
+	require.Len(t, invalidImports, 0)
+}
+
+func TestCrawler_RunService_NoCommonImports(t *testing.T) {
+
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList()).RunService("..", "analysis")
+	require.True(t, len(invalidImports) > 0)
 }
