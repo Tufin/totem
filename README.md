@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/Tufin/totem.svg?style=shield)](https://circleci.com/gh/Tufin/totem)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tufin/totem)](https://goreportcard.com/report/github.com/tufin/totem)
-
+[![codecov](https://codecov.io/gh/Tufin/totem/branch/master/graph/badge.svg)](https://codecov.io/gh/Tufin/totem)
 
 Find invalid golang imports in a mono-repo project
 
