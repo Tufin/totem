@@ -14,7 +14,7 @@ jobs:
           name: Test
           command:
             chmod +x script/testcov.sh
-            /script/testcov.sh
+            script/testcov.sh
       - run:
           name: Upload coverage results
           command:
