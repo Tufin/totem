@@ -25,7 +25,7 @@ func TestGetInvalidImports(t *testing.T) {
 		"github.com/tufin/orca/util/log",
 		"github.com/tufin/orca/aws/cloud",
 	} {
-		require.True(t, invalids.Contains(currImport))
+		require.True(t, invalids.Contains(currImport), currImport)
 	}
 }
 
