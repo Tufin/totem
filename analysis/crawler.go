@@ -13,12 +13,12 @@ import (
 type Crawler struct {
 	pkg           string
 	commonImports *common.List
-	skipServices  *common.List
+	skipFolders   *common.List
 }
 
-func NewCrawler(pkg string, commonImports *common.List, skipServices *common.List) *Crawler {
+func NewCrawler(pkg string, commonImports *common.List, skipFolders *common.List) *Crawler {
 
-	return &Crawler{pkg: pkg, commonImports: commonImports, skipServices: skipServices}
+	return &Crawler{pkg: pkg, commonImports: commonImports, skipFolders: skipFolders}
 }
 
 func (c Crawler) Run(root string) map[string][]string {
@@ -27,7 +27,7 @@ func (c Crawler) Run(root string) map[string][]string {
 	for _, currFile := range getFiles(root) {
 		if currFile.IsDir() {
 			currService := currFile.Name()
-			if !c.skipServices.Contains(currService) {
+			if !c.skipFolders.Contains(currService) {
 				ret = union(ret, c.RunService(root, currService))
 			}
 		}

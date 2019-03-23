@@ -10,11 +10,11 @@ import (
 
 func TestCrawler_Run(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", getCommonImports(), getSkipServices()).Run("..")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", getCommonImports(), getSkipFolders()).Run("..")
 	require.Len(t, invalidImports, 0)
 }
 
-func TestCrawler_Run_NoSkipServices(t *testing.T) {
+func TestCrawler_Run_NoSkipFolders(t *testing.T) {
 
 	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", getCommonImports(), common.NewList()).Run("..")
 	require.Equal(t, invalidImports["../skipme/invalid.go"][0], "github.com/tufin/totem/analysis")
@@ -22,7 +22,7 @@ func TestCrawler_Run_NoSkipServices(t *testing.T) {
 
 func TestCrawler_Run_NoCommonImports(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipServices()).Run("..")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipFolders()).Run("..")
 	require.True(t, len(invalidImports) > 0)
 }
 
@@ -30,28 +30,28 @@ func TestCrawler_RunService(t *testing.T) {
 
 	imports := common.NewList()
 	imports.Add("github.com/tufin/totem/common")
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", imports, getSkipServices()).RunService("..", "analysis")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", imports, getSkipFolders()).RunService("..", "analysis")
 	require.Len(t, invalidImports, 0)
 }
 
 func TestCrawler_RunService_NoCommonImports(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipServices()).RunService("..", "analysis")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipFolders()).RunService("..", "analysis")
 	require.True(t, len(invalidImports) > 0)
 }
 
 func getCommonImports() *common.List {
 
-	imports := common.NewList()
-	imports.Add("github.com/tufin/totem/common")
+	ret := common.NewList()
+	ret.Add("github.com/tufin/totem/common")
 
-	return imports
+	return ret
 }
 
-func getSkipServices() *common.List {
+func getSkipFolders() *common.List {
 
-	imports := common.NewList()
-	imports.Add("skipme")
+	ret := common.NewList()
+	ret.Add("skipme")
 
-	return imports
+	return ret
 }

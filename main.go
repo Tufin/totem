@@ -34,8 +34,9 @@ func getInvalidImports() map[string][]string {
 
 	imports := common.NewList()
 	imports.AddItems(strings.Split(common.GetEnv("TOTEM_COMMON_IMPORTS"), ","))
+
 	skipServices := common.NewList()
-	skipServices.AddItems(strings.Split(common.GetEnv("TOTEM_SKIP_SERVICES"), ","))
+	skipServices.AddItems(strings.Split(common.GetEnv("TOTEM_SKIP_FOLDERS"), ","))
 
 	crawler := analysis.NewCrawler(common.GetEnvOrExit("TOTEM_PACKAGE"), imports, skipServices)
 	root := common.GetEnvOrExit("TOTEM_PATH")
