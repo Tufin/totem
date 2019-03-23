@@ -7,7 +7,7 @@ import (
 
 // this file contains invalid import to analysis package
 // "skipme" package created in order to test the "skip packages" feature
-func InvalidImport() {
+func invalidImport() {
 
 	analysis.NewCrawler("", common.NewList(), common.NewList())
 }
