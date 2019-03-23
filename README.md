@@ -14,6 +14,11 @@ export TOTEM_PACKAGE=github.com/tufin/orca/
 export TOTEM_PATH=/Users/israel/view/go/src/github.com/tufin/orca
 ```
 This will run on root folder that contains **multiple micro-services**.
+
+Set `SKIP_FOLDERS` for skip folders that you don't want to scan:
+```bash
+export TOTEM_SKIP_FOLDERS=migration,itest
+```
 Set below environment variable if you want to run _totem_ on a **specific service**:
 ```bash
 export TOTEM_SERVICE=ceribro
