@@ -23,5 +23,5 @@ func TestGetEnvOrExit(t *testing.T) {
 func TestGetEnv(t *testing.T) {
 
 	require.NoError(t, os.Setenv(key, value))
-	require.Equal(t, value, common.GetEnvOrExit(key))
+	require.Equal(t, value, common.GetEnv(key))
 }
