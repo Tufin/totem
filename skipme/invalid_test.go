@@ -8,5 +8,5 @@ import (
 
 func TestInvalidImport(t *testing.T) {
 
-	skipme.invalidImport()
+	skipme.InvalidImport()
 }
