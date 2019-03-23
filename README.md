@@ -15,7 +15,7 @@ export TOTEM_PATH=/Users/israel/view/go/src/github.com/tufin/orca
 ```
 This will run on root folder that contains **multiple micro-services**.
 
-Set `SKIP_FOLDERS` for skip folders that you don't want to scan:
+Set `SKIP_FOLDERS` for skipping folders that you don't want to scan:
 ```bash
 export TOTEM_SKIP_FOLDERS=migration,itest
 ```
