@@ -3,11 +3,9 @@ package analysis
 import (
 	"regexp"
 	"strings"
-
-	"github.com/tufin/totem/common"
 )
 
-func GetInvalidImports(service string, pkg string, file []byte, commonImports *common.List) []string {
+func GetInvalidImports(service string, pkg string, file []byte, commonImports []string) []string {
 
 	var ret []string
 	for _, currImport := range getAllImports(file) {
@@ -19,13 +17,26 @@ func GetInvalidImports(service string, pkg string, file []byte, commonImports *c
 	return ret
 }
 
-func isValid(service string, pkg string, check string, commonImports *common.List) bool {
+func isValid(service string, pkg string, check string, commonImports []string) bool {
 
 	ret := true
 	if strings.HasPrefix(check, pkg) &&
 		getService(check, pkg) != service &&
-		!commonImports.Contains(check) {
+		!isCommon(commonImports, check) {
 		ret = false
+	}
+
+	return ret
+}
+
+func isCommon(commonImports []string, path string) bool {
+
+	ret := false
+	for _, currCommonImport := range commonImports {
+		if strings.HasPrefix(path, currCommonImport) {
+			ret = true
+			break
+		}
 	}
 
 	return ret

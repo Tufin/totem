@@ -12,11 +12,11 @@ import (
 
 type Crawler struct {
 	pkg           string
-	commonImports *common.List
+	commonImports []string
 	skipFolders   *common.List
 }
 
-func NewCrawler(pkg string, commonImports *common.List, skipFolders *common.List) *Crawler {
+func NewCrawler(pkg string, commonImports []string, skipFolders *common.List) *Crawler {
 
 	return &Crawler{pkg: pkg, commonImports: commonImports, skipFolders: skipFolders}
 }

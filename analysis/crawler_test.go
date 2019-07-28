@@ -10,42 +10,32 @@ import (
 
 func TestCrawler_Run(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", getCommonImports(), getSkipFolders()).Run("..")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", []string{"github.com/tufin/totem/common"}, getSkipFolders()).Run("..")
 	require.Len(t, invalidImports, 0)
 }
 
 func TestCrawler_Run_NoSkipFolders(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", getCommonImports(), common.NewList()).Run("..")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", []string{"github.com/tufin/totem/common"}, common.NewList()).Run("..")
 	require.Equal(t, invalidImports["../skipme/invalid.go"][0], "github.com/tufin/totem/analysis")
 }
 
 func TestCrawler_Run_NoCommonImports(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipFolders()).Run("..")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", []string{}, getSkipFolders()).Run("..")
 	require.True(t, len(invalidImports) > 0)
 }
 
 func TestCrawler_RunService(t *testing.T) {
 
-	imports := common.NewList()
-	imports.Add("github.com/tufin/totem/common")
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", imports, getSkipFolders()).RunService("..", "analysis")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", []string{"github.com/tufin/totem/common"}, getSkipFolders()).RunService("..", "analysis")
 	require.Len(t, invalidImports, 0)
 }
 
 func TestCrawler_RunService_NoCommonImports(t *testing.T) {
 
-	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", common.NewList(), getSkipFolders()).RunService("..", "analysis")
+	invalidImports := analysis.NewCrawler("github.com/tufin/totem/", []string{}, getSkipFolders()).RunService("..", "analysis")
 	require.True(t, len(invalidImports) > 0)
-}
-
-func getCommonImports() *common.List {
-
-	ret := common.NewList()
-	ret.Add("github.com/tufin/totem/common")
-
-	return ret
 }
 
 func getSkipFolders() *common.List {
