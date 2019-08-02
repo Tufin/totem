@@ -1,0 +1,142 @@
+package analysis
+
+import (
+	"io/ioutil"
+	"testing"
+
+    "github.com/tufin/orca/common/service/ips"
+	"github.com/tufin/orca/common/netpol/validation"
+	"github.com/tufin/orca/ceribro/container/clair"
+    _ "github.com/hi/bob/aws/cloud"
+	ct "github.com/tufin/orca/common/netpol"
+	"github.com/tufin/orca/common"
+)
+
+var severityToPriority = map[string]types.Priority{
+	"unknown":    types.Unknown,
+	"negligible": types.Negligible,
+	"low":        types.Low,
+	"medium":     types.Medium,
+	"high":       types.High,
+	"critical":   types.Critical,
+	"defcon1":    types.Defcon1,
+}
+
+func ToOrcaDevice(container DeviceContainer) OrcaDevice {
+
+	if len(container.Devices) == 0 {
+		return OrcaDevice{}
+	}
+
+	device := container.Devices[0]
+	services := toOrcaServices(device)
+
+	return OrcaDevice{
+		Domain:        device.Domain,
+		City:          device.Location.City,
+		CountryName:   device.Location.CountryName,
+		DeviceType:    device.DeviceType,
+		IPAddress:     device.IPAddress,
+		Isp:           device.Isp,
+		RiskScore:     device.RiskScore,
+		Services:      services,
+		SecurityScore: getLowestSecurityScore(services),
+	}
+}
+
+func getLowestSecurityScore(services []OrcaService) string {
+
+	ret := 100
+	for _, currService := range services {
+		if currService.Rank < ret {
+			ret = currService.Rank
+		}
+	}
+
+	return getSecurityScore(ret)
+}
+
+func toOrcaServices(device Device) []OrcaService {
+
+	var ret []OrcaService
+	for _, currService := range device.Services {
+		ret = append(ret, toOrcaService(currService))
+	}
+
+	return ret
+}
+
+func toOrcaService(service Service) OrcaService {
+
+	rank := clair.GetRank(toVulnerabilityInfo(service))
+	return OrcaService{
+		Transport:       service.Transport,
+		Protocol:        service.Protocol,
+		Port:            service.Port,
+		Platform:        service.Platform,
+		Vulnerabilities: getVulnerabilities(service),
+		Rank:            rank,
+		SecurityScore:   getSecurityScore(rank),
+	}
+}
+
+func getSecurityScore(rank int) string {
+
+	return container.GetScore(api.Scan{
+		Rank:  rank,
+		State: api.Finished,
+	})
+}
+
+func toVulnerabilityInfo(service Service) []clair.VulnerabilityInfo {
+
+	var ret []clair.VulnerabilityInfo
+	for _, currVulnerability := range service.Vulnerabilities {
+		ret = append(ret, clair.VulnerabilityInfo{
+			Severity: toPriority(currVulnerability.Severity),
+		})
+	}
+
+	return ret
+}
+
+func toPriority(severity string) types.Priority {
+
+	ret, ok := severityToPriority[severity]
+	if !ok {
+		log.Errorf("failed to convert reposify severity '%s' to clair priority", severity)
+		ret = types.Medium
+	}
+
+	return ret
+}
+
+func getVulnerabilities(service Service) []OrcaVulnerability {
+
+	ret := make(map[string]OrcaVulnerability)
+	for _, currVulnerability := range service.Vulnerabilities {
+		currSummary, ok := ret[string(currVulnerability.Severity)]
+		if ok {
+			ret[string(currVulnerability.Severity)] = OrcaVulnerability{
+				Severity: currSummary.Severity,
+				Items:    currSummary.Items + 1}
+		} else {
+			ret[string(currVulnerability.Severity)] = OrcaVulnerability{
+				Severity: currVulnerability.Severity,
+				Items:    1,
+			}
+		}
+	}
+
+	return values(ret)
+}
+
+func values(summary map[string]OrcaVulnerability) []OrcaVulnerability {
+
+	ret := make([]OrcaVulnerability, 0, len(summary))
+	for _, value := range summary {
+		ret = append(ret, value)
+	}
+
+	return ret
+}

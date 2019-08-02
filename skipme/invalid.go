@@ -11,5 +11,5 @@ import (
 // "skipme" package created in order to test the "skip packages" feature
 func InvalidImport() {
 
-	analysis.NewCrawler("", common.NewList(), common.NewList())
+	analysis.NewCrawler("", []string{}, common.NewList())
 }

@@ -32,8 +32,7 @@ func main() {
 
 func getInvalidImports() map[string][]string {
 
-	imports := common.NewList()
-	imports.AddItems(strings.Split(common.GetEnv("TOTEM_COMMON_IMPORTS"), ","))
+	imports := strings.Split(common.GetEnv("TOTEM_COMMON_IMPORTS"), ",")
 
 	skipServices := common.NewList()
 	skipServices.AddItems(strings.Split(common.GetEnv("TOTEM_SKIP_FOLDERS"), ","))
